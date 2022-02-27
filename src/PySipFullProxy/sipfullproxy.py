@@ -47,13 +47,7 @@ rx_contact = re.compile("^Contact:")
 rx_ccontact = re.compile("^m:")
 rx_uri = re.compile("sip:([^@]*)@([^;>$]*)")
 rx_addr = re.compile("sip:([^ ;>$]*)")
-#rx_addrport = re.compile("([^:]*):(.*)")
 rx_code = re.compile("^SIP/2.0 ([^ ]*)")
-#rx_invalid = re.compile("^192\.168")
-#rx_invalid2 = re.compile("^10\.")
-#rx_cseq = re.compile("^CSeq:")
-#rx_callid = re.compile("Call-ID: (.*)$")
-#rx_rr = re.compile("^Record-Route:")
 rx_request_uri = re.compile("^([^ ]*) sip:([^ ]*) SIP/2.0")
 rx_route = re.compile("^Route:")
 rx_contentlength = re.compile("^Content-Length:")
@@ -201,7 +195,7 @@ class UDPHandler(socketserver.BaseRequestHandler):
             index += 1
             if line == "":
                 break
-        data.append("")
+        data.append("") 
         text = "\r\n".join(data)
         self.socket.sendto(text.encode(), self.client_address)
         showtime()
@@ -215,11 +209,6 @@ class UDPHandler(socketserver.BaseRequestHandler):
         header_expires = ""
         expires = 0
         validity = 0
-        authorization = ""
-        index = 0
-        auth_index = 0
-        data = []
-        size = len(self.data)
         for line in self.data:
             if rx_to.search(line) or rx_cto.search(line):
                 md = rx_uri.search(line)
@@ -239,12 +228,7 @@ class UDPHandler(socketserver.BaseRequestHandler):
             md = rx_expires.search(line)
             if md:
                 header_expires = md.group(1)
-        
-        # if rx_invalid.search(contact) or rx_invalid2.search(contact):
-        #     if fromm in registrar:
-        #         del registrar[fromm]
-        #     self.sendResponse("488 Not Acceptable Here")    
-        #     return
+
         if len(contact_expires) > 0:
             expires = int(contact_expires)
         elif len(header_expires) > 0:
@@ -398,7 +382,7 @@ class UDPHandler(socketserver.BaseRequestHandler):
     
     def handle(self):
         #socket.setdefaulttimeout(120)
-        data = self.request[0].decode("utf-8")
+        data = self.request[0].decode("utf-8", "ignore")
         self.data = data.split("\r\n")
         self.socket = self.request[1]
         request_uri = self.data[0]
@@ -421,8 +405,6 @@ if __name__ == "__main__":
     hostname = socket.gethostname()
     logging.info(hostname)
     ipaddress = socket.gethostbyname(hostname)
-    #print(hostname)
-    #print(ipaddress)
     if ipaddress == "127.0.0.1":
         ipaddress = sys.argv[1]
     logging.info(ipaddress)
