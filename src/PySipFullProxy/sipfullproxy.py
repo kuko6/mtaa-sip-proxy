@@ -247,7 +247,7 @@ class UDPHandler(socketserver.BaseRequestHandler):
             
     
         logging.info(f'Zaregistroval sa: {fromm}, adresa: {contact}')
-        print(f'Zaregistroval sa: {fromm}, adresa: {contact}')
+        #print(f'Zaregistroval sa: {fromm}, adresa: {contact}')
         #logging.debug("Client address: %s:%s" % self.client_address)
         #logging.debug("Expires= %d" % expires)
         registrar[fromm]=[contact,self.socket,self.client_address,validity]
@@ -274,12 +274,11 @@ class UDPHandler(socketserver.BaseRequestHandler):
                 data.insert(1,recordroute)
                 text = "\r\n".join(data)
                 socket.sendto(text.encode(), claddr)
-                #print(data)
                 #showtime()
                 #logging.info("<<< %s" % data[0])
                 call_id = re.search('Call-ID: (.+)', data[7])
-                logging.info(f'{origin} zacal volanie {destination}, [Call-ID: {call_id.group(1)}]')
-                print(f'{origin} zacal volanie {destination}')
+                logging.info(f'{origin} zacal hovor s {destination}, [Call-ID: {call_id.group(1)}]')
+                #print(f'{origin} zacal volanie {destination}')
                 #logging.debug("---\n<< server send [%d]:\n%s\n---" % (len(text),text))
             else:
                 self.sendResponse("480 Temporarily Unavailable")
@@ -301,7 +300,6 @@ class UDPHandler(socketserver.BaseRequestHandler):
                 #insert Record-Route
                 data.insert(1,recordroute)
                 text = "\r\n".join(data)
-                #print(data)
                 socket.sendto(text.encode(), claddr)
                 #showtime()
                 #logging.info("<<< %s" % data[0])
@@ -327,9 +325,8 @@ class UDPHandler(socketserver.BaseRequestHandler):
                 data.insert(1,recordroute)
                 text = "\r\n".join(data)
                 
-                #print(data)
                 if ("BYE" in data[0]):
-                    print(f'{origin} polozil hovor')
+                    #print(f'{origin} polozil hovor')
                     logging.info(f'{origin} polozil hovor')
                     call_id = re.search('Call-ID: (.+)', data[7])
                     logging.info(f'Hovor [Call-ID: {call_id.group(1)}] skoncil')
@@ -354,21 +351,20 @@ class UDPHandler(socketserver.BaseRequestHandler):
                 data = self.removeTopVia()
                 text = "\r\n".join(data)
 
-                # tuto prechadzaju tie spravy a daju sa menit, logovat (podla toho aky kod sa nachadza v text vie o aku spravu ide)
-                #print(data)
+                #print(data[0])
                 dest = re.search('<sip:(.+?)>', data[3])
                 if ("200" in data[0]): # Ok
-                    logging.info('Ok')
-                    print("Ok")
+                    logging.info('200 Ok')
+                    #print("Ok")
                 elif ("180" in data[0]): # Ringing
                     logging.info('Zvoni')
-                    print("Zvoni")
+                    #print("Zvoni")
                 elif ("603" in data[0]): # Decline
                     logging.info(f'{dest.group(1)} odmietol hovor')
-                    print("Odmietnuty")
+                    #print("Odmietnuty")
                 elif ("486" in data[0]): # Busy here
                     logging.info(f'{dest.group(1)} neprijal hovor')
-                    print("Busy here")
+                    #print("Busy here")
                 socket.sendto(text.encode(), claddr)
                 #showtime()
                 #logging.info("<<< %s" % data[0])
@@ -377,7 +373,6 @@ class UDPHandler(socketserver.BaseRequestHandler):
                 
     def processRequest(self):
         #print "processRequest"
-        #print(registrar)
         if len(self.data) > 0:
             request_uri = self.data[0]
             if rx_register.search(request_uri):
@@ -438,10 +433,9 @@ if __name__ == "__main__":
     logging.info(time.strftime("%a, %d %b %Y %H:%M:%S ", time.localtime()))
     hostname = socket.gethostname()
     logging.info(hostname)
-    #ipaddress = socket.gethostbyname(hostname)
-    ipaddress = "192.168.1.194"
-    # if ipaddress == "127.0.0.1":
-    #     ipaddress = sys.argv[1]
+    ipaddress = socket.gethostbyname(hostname)
+    if ipaddress == "127.0.0.1":
+        ipaddress = sys.argv[1]
     logging.info(ipaddress)
     recordroute = "Record-Route: <sip:%s:%d;lr>" % (ipaddress,PORT)
     topvia = "Via: SIP/2.0/UDP %s:%d" % (ipaddress,PORT)
