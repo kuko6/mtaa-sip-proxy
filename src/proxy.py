@@ -1,4 +1,3 @@
-import re
 import PySipFullProxy.sipfullproxy as proxy
 import socket
 import socketserver
