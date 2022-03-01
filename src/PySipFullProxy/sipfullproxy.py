@@ -281,7 +281,7 @@ class UDPHandler(socketserver.BaseRequestHandler):
                 #print(f'{origin} zacal volanie {destination}')
                 #logging.debug("---\n<< server send [%d]:\n%s\n---" % (len(text),text))
             else:
-                self.sendResponse("480 Temporarily Unavailable")
+                self.sendResponse("480 Nedostupny")
         else:
             self.sendResponse("500 Server Internal Error")
                 
@@ -355,15 +355,21 @@ class UDPHandler(socketserver.BaseRequestHandler):
                 dest = re.search('<sip:(.+?)>', data[3])
                 if ("200" in data[0]): # Ok
                     logging.info('200 Ok')
+                    text = text.replace('Ok', 'Oki')
                     #print("Ok")
                 elif ("180" in data[0]): # Ringing
                     logging.info('Zvoni')
+                    text = text.replace('Ringing', 'Zvoni')
                     #print("Zvoni")
+                elif ("100" in data[0]): # Trying
+                    text = text.replace('Trying', 'Skusam')
                 elif ("603" in data[0]): # Decline
                     logging.info(f'{dest.group(1)} odmietol hovor')
+                    text = text.replace('Decline', 'Odmietnutie')
                     #print("Odmietnuty")
                 elif ("486" in data[0]): # Busy here
                     logging.info(f'{dest.group(1)} neprijal hovor')
+                    text = text.replace('Busy here', 'Neotravuj')
                     #print("Busy here")
                 socket.sendto(text.encode(), claddr)
                 #showtime()
