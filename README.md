@@ -1,24 +1,23 @@
 # mtaa-sip-proxy
 ## Jakub Povinec
 
-V tomto zadaní sme mali pomocou ľubovoľnej knižnice vytvoriť proxy server, ktorý umožní telefonovanie medzi dvomi (alebo viacerými) SIP klientami. 
+In this assignment, we were supposed to use any library to create a proxy server that will enable phone calls between two (or more) SIP clients.
 
-Zadanie som implementoval v jazyku Python 3.9.7. Použil som knižnicu [PySipFullProxy](https://github.com/tirfil/PySipFullProxy) a voľne dostupný klient [linphone](https://www.linphone.org). 
+I implemented the assignment in Python 3.9. I used the [PySipFullProxy](https://github.com/tirfil/PySipFullProxy) library and the freely available [linphone](https://www.linphone.org) client.
 
-### proxy podporuje:
-- [x] Registráciu účastníka
-- [x] Vytáčanie, zvonenie, prijatie a ukončenie hovoru
-- [x] Videohovor
-- [x] Presmerovanie 
-- [x] Konferenčný hovor
-- [x] Taktiež som zmenil niektoré SIP stavové kódy
+### proxy supports:
+- [x] Participant registration
+- [x] Dialing, ringing, accepting and ending a call
+- [x] Video call
+- [x] Redirection
+- [x] Conference call
+- [x] I also changed some SIP status codes
 
-### pcap súbory:
-- register.pcap -> obsahuje registráciu dvoch klientov
-- hovor.pcapng -> obsahuje úspešný, neúspešný (Busy here, Decline), neobsahuje RTP packety
-- hovor_rtp.pcapng -> obsahuje štandardný hovor medzi zariadením na ktorom je proxy, je to trochu neprehľadné ale sú tam aj RTP packety
-- videohovor.pcapng -> obsahuje videohovor medzi dvomi zariadeniami, bez RTP
-- videohovor_rtp.pcapng –> rovnako ako hovor_rtp.pcapng
-- presmerovanie.pcapng -> obsahuje presmerovanie hovoru
-- konferencny_hovor.pcapng -> obsahuje konferenčný hovor medzi tromi učastníkmi
-
+### pcap files:
+- register.pcap -> contains the registration of two clients
+- call.pcapng -> contains successful, unsuccessful (Busy here, Decline), does not contain RTP packets
+- hovor_rtp.pcapng -> contains a standard call between a device on which there is a proxy, it is a bit confusing, but there are also RTP packets
+- videocall.pcapng -> contains a video call between two devices, without RTP
+- videocall_rtp.pcapng –> same as call_rtp.pcapng
+- forwarding.pcapng -> contains call forwarding
+- conference_call.pcapng -> contains a conference call between three participants
