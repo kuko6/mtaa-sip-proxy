@@ -1,5 +1,4 @@
 # mtaa-sip-proxy
-## Jakub Povinec
 
 In this assignment, we were supposed to use any library to create a proxy server that will enable phone calls between two (or more) SIP clients.
 
